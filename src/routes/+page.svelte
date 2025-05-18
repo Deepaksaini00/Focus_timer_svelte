@@ -1,12 +1,37 @@
-<script>
-	let hours = 0;
-	let minutes = 10;
-	let seconds = 59;
-	function startTimer(){
-		console.log(`${hours} : ${minutes} : ${seconds} `);
+<script lang="ts">
+	import {toSeconds , setTime} from '$lib/util/timer'
+	let hours:number = 0;
+	let minutes:number = 0;
+	let seconds:number = 0;
+	let intervalId : number | null = null;
+	let totalSeconds: number = 0;
 
-}
+	function startTimer() {
+		if(!intervalId){
+			totalSeconds = toSeconds(hours, minutes , seconds);
+			intervalId = setInterval(()=> {
+				if(totalSeconds > 0){
+					totalSeconds--;
+					console.log("sec",totalSeconds);
+					const time = setTime(totalSeconds);
+					hours = time.h;
+					minutes = time.m;
+					seconds = time.s;
+				}else{
+					stop()
+					alert('Focus Session Completed');
+				}
+			},1000)  
+		}
 
+	function stop(){
+		console.log("stoppppping......")
+		if(intervalId){
+			clearInterval(intervalId);
+			intervalId = null;
+		}
+	}
+	}
 </script>
 
 <div class="bg-orange-200">
@@ -18,7 +43,7 @@
 			</h1>
 		</div>
 		<div></div>
-		<form
+		<form on:submit|preventDefault = {startTimer}
 			id="time-form"
 			class="border-4 border-indigo-500 flex flex-col items-center justify-center min-h-screen flex-grow"
 		>
@@ -27,7 +52,7 @@
 			</p>
 			<div class="h-20 max-w-fit flex items-center justify-center gap-2">
 				<input
-					bind:value={hours} 
+					bind:value={hours}
 					type="number"
 					min="0"
 					max="59"
@@ -55,11 +80,13 @@
 			</div>
 
 			<div class="flex gap-x-3">
-				<button on:click={startTimer}
+				<button
+					on:click={startTimer}
 					class="bg-orange-400 hover:bg-orange-500 h-10 max-w-fit mt-10 font-bold p-2 border-2 border-black rounded-xl"
 					id="start-btn">Start</button
 				>
 				<button
+					on:click={stop}
 					class="bg-green-400 hover:bg-green-500 h-10 max-w-fit mt-10 font-bold p-2 border-2 border-black rounded-xl"
 					id="stop-btn">Stop</button
 				>
