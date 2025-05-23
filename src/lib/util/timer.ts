@@ -10,6 +10,6 @@ export function toSeconds (hrs:number , min:number , sec:number):number
 export function setTime (totalSec:number): {h:number , m: number , s:number} {
   const h = Math.floor(totalSec / 3600);
   const m = Math.floor((totalSec % 3600)/60);
-  const s = Math.floor(totalSec / 60);
+  const s = Math.floor(totalSec % 60);
   return {h , m , s};
 }
